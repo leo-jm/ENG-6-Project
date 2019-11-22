@@ -1,7 +1,9 @@
-classdef deck
+classdef deck < handle
     properties
         decks;
         cards = [];
+        discardPile =[];
+        table = [];
     end
     methods
         % Constructor function
@@ -28,9 +30,46 @@ classdef deck
                 end
             end
         end
+                
+        % Shuffle deck
+        function shuffleDeck(obj)
+            obj.cards = obj.cards(randperm(length(obj.cards)));
+        end
+        
         % Draw top card
         function drawCard(obj)
             obj.cards(1).cardPlayed;
+            if ~isempty(obj.table)
+                obj.table(end+1) = obj.cards(1);
+            else
+                obj.table = obj.cards(1);
+            end
+            obj.cards = obj.cards(2:end);
+        end
+        
+        % Clear away cards in play
+        function clearTable(obj)
+            obj.discardPile = obj.table;
+            for i = 1:length(obj.discardPile)
+                obj.discardPile(i).discard;
+            end
+            obj.table = [];
+        end
+        
+        % Reshuffle discard pile into deck
+        function reshuffleDiscard(obj)
+            obj.cards = [obj.cards,obj.discardPile];
+            for i = 1:length(obj.discardPile)
+                obj.discardPile(i).reshuffle;
+            end
+            obj.discardPile = [];
+            obj.shuffleDeck;
+        end
+        
+        % Reset deck, reshuffle cards on table and in discard pile
+        function resetDeck(obj)
+            obj.clearTable;
+            obj.reshuffleDiscard;
         end
     end
 end

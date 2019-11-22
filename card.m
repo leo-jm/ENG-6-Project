@@ -24,9 +24,10 @@ classdef card < handle
         function discard(obj)
             obj.inPlay = 0;
         end
-        
+        % Call when deck is reshuffled
         function reshuffle(obj)
             obj.played = 0;
+            obj.inPlay = 0;
         end
     end   
 end
