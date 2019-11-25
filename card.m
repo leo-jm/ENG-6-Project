@@ -10,6 +10,14 @@ classdef card < handle
         % Constructor function
         function obj = card(cardNumber)
             obj.cardNumber = cardNumber;
+            cardValues =[10;1;2;3;4;5;6;7;8;9;10;10];
+            remainder = mod(cardNumber,12);
+            obj.value = cardValues(remainder+1);
+            %{
+            if obj.value == 1
+                obj.value = [1,11];
+            end  
+            %}
         end
         % Call if card is drawn from deck
         function cardPlayed(obj)
