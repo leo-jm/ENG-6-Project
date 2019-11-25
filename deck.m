@@ -37,13 +37,14 @@ classdef deck < handle
         end
         
         % Draw top card
-        function drawCard(obj)
+        function carddrawn = drawCard(obj)
             obj.cards(1).cardPlayed;
             if ~isempty(obj.table)
                 obj.table(end+1) = obj.cards(1);
             else
                 obj.table = obj.cards(1);
             end
+            carddrawn = obj.cards(1);
             obj.cards = obj.cards(2:end);
         end
         

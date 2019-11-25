@@ -1,14 +1,15 @@
 classdef card < handle
     properties
-        value;
+        cardNumber = 0;
+        value = 0;
         played = 0;
         inPlay = 0;
         position = 0;
     end
     methods
         % Constructor function
-        function obj = card(value)
-            obj.value = value;
+        function obj = card(cardNumber)
+            obj.cardNumber = cardNumber;
         end
         % Call if card is drawn from deck
         function cardPlayed(obj)
