@@ -18,7 +18,8 @@ classdef player < handle
                 obj.hand = card;
             end
         end
-        % need to add functionality for 1 or 11 value
+        % Calculates the value of the player's hand
+        % Will count an Ace as 11 if the hand value doesn't pass 21
         function calcHandValue (obj)
             cardValues = [obj.hand.value];
             logic = cardValues == 1;
