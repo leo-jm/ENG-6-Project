@@ -5,9 +5,15 @@ classdef player < handle
     end
     methods
         % Gives player two cards
-        function obj = player(cardDeck)
+        function obj = player(cardDeck,dealer)
             obj.hand = cardDeck.drawCard;
             obj.hand(end+1) = cardDeck.drawCard;
+            if nargin == 2
+                if dealer == 1
+                    obj.hand(1).cardFaceUp                   
+                end
+            end
+            obj.calcHandValue
         end
         % Adds one card to player's hand
         function hit(obj,cardDeck)

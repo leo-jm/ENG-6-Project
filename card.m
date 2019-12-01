@@ -5,6 +5,7 @@ classdef card < handle
         played = 0;
         inPlay = 0;
         position = 0;
+        faceup = 0;
     end
     methods
         % Constructor function
@@ -29,12 +30,24 @@ classdef card < handle
         % Call when card is discarded
         function discard(obj)
             obj.inPlay = 0;
+            obj.faceup = 0;
+        end
+        
+        % Call when card is face up
+        function cardFaceUp(obj)
+            obj.faceup = 1;
+        end
+        
+        % Call when card is face down
+        function cardFaceDown(obj)
+            obj.faceup = 0;
         end
         
         % Call when deck is reshuffled
         function reshuffle(obj)
             obj.played = 0;
             obj.inPlay = 0;
+            obj.faceup = 0;
         end
     end   
 end
