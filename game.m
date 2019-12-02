@@ -1,19 +1,22 @@
 cardDeck = deck;
 cardDeck.shuffleDeck;
-AI = player(cardDeck);
-player1 = player(cardDeck);
-ingame = 1;
-while ingame
-    AI.calcHandValue
-    player1.calcHandValue
+dealer = player(cardDeck,1);
+player1 = player(cardDeck,0);
+aiplayer1 = player(cardDeck,0);
+aicontrol = AImedium;
+while player1.balance > 0
+    ingame = 1;
     play = 1;
+    bet = double(input("What is your bet? "));
+    player1.changeBet(bet)
+    disp("Balance")
+    disp(player1.balance)
     % Player's turn
     while play
         disp("Your hand value")
         disp(player1.handValue)
-        if player1.handValue == 21
-            ingame = 0;  
-            disp("You win")
+        if player1.handValue == 21  
+            disp("Blackjack!")
             break
         end
         playerinput = input("Hit or pass?",'s');
@@ -30,40 +33,112 @@ while ingame
         if player1.handValue > 21
             ingame = 0;  
             disp("You lose")
+            player1.changeBalance(0)
+            disp("Balance")
+            disp(player1.balance)
             break
         end
-        if player1.handValue == 21
-            ingame = 0;  
-            disp("You win")
+        if player1.handValue == 21 
+            disp("Blackjack!")
             break
         end
     end
-    if ~ingame
-        break
+    if ingame
+    % AI player's turn
+    play = 1;
+    while play
+        disp("AI hand value")
+        disp(aiplayer1.handValue)
+        if aiplayer1.handValue == 21  
+            disp("Blackjack!")
+            break
+        end
+        if aicontrol.AImove(cardDeck,aiplayer1)
+            disp("AI hit")
+            aiplayer1.hit(cardDeck)
+        else
+            disp("AI stand")
+            play = 0;
+            break
+        end
+        aiplayer1.calcHandValue
+        disp("AI hand value")
+        disp(aiplayer1.handValue)
+        % Determine if you busted
+        if aiplayer1.handValue > 21 
+            disp("AI Bust")
+            aiplayer1.handValue = 0;
+            break
+        end
+        if aiplayer1.handValue == 21 
+            disp("Blackjack!")
+            break
+        end
+        pause(3)
     end
     % Dealer's turn
     disp("Dealer hand value")
-    disp(AI.handValue)
-    while AI.handValue < 17
-        AI.hit(cardDeck)
-        AI.calcHandValue
+    disp(dealer.handValue)
+    while dealer.handValue < 17
+        dealer.hit(cardDeck)
+        dealer.calcHandValue
         disp("Dealer hit")
-        disp(AI.handValue)
-        pause(1)
+        disp(dealer.handValue)
+        pause(3)
     end
     % Determine winner
     disp("Dealer hand value")
-    disp(AI.handValue)
-    if AI.handValue > 21
-        ingame = 0;  
-        disp("You win")
-        break
-    end
-    if player1.handValue > AI.handValue
-        disp("You win")
-        ingame = 0;
+    disp(dealer.handValue)
+    if dealer.handValue > 21
+        disp("Dealer bust")
+        if player1.handValue > aiplayer1.handValue
+            disp("You win")
+            player1.changeBalance(1)
+            disp("Balance")
+            disp(player1.balance)
+        elseif player1.handValue == aiplayer1.handValue
+            disp("Tie")
+        else
+            disp("You lose")
+            player1.changeBalance(0)
+            disp("Balance")
+            disp(player1.balance)
+        end
+    elseif player1.handValue > dealer.handValue
+        if player1.handValue > aiplayer1.handValue
+            disp("You win")
+            player1.changeBalance(1)
+            disp("Balance")
+            disp(player1.balance)
+        elseif player1.handValue == aiplayer1.handValue
+            disp("Tie")
+        else
+            disp("You lose")
+            player1.changeBalance(0)
+            disp("Balance")
+            disp(player1.balance)
+        end
+    elseif player1.handValue == dealer.handValue
+        if player1.handValue < aiplayer1.handValue
+            disp("You lose")
+            player1.changeBalance(0)
+            disp("Balance")
+            disp(player1.balance)
+        else
+            disp("Tie")
+        end
     else
         disp("You lose")
-        ingame = 0;
+        player1.changeBalance(0)
+        disp("Balance")
+        disp(player1.balance)
+    end
+    end
+    cardDeck.clearTable
+    player1.newHand(cardDeck,0)
+    aiplayer1.newHand(cardDeck,0)
+    dealer.newHand(cardDeck,1)
+    if size(cardDeck.cards) < 5
+        cardDeck.resetDeck
     end
 end
