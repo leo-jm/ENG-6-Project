@@ -83,24 +83,24 @@ switch cardNumber
         obj.image=imread('2_of_clubs.png');
     case 42
         obj.image=imread('3_of_clubs.png');
-    case 44
+    case 43
         obj.image=imread('4_of_clubs.png');
-    case 45
+    case 44
         obj.image=imread('5_of_clubs.png');
-    case 46
+    case 45
         obj.image=imread('6_of_clubs.png');
-    case 47
+    case 46
         obj.image=imread('7_of_clubs.png');
-    case 48
+    case 47
         obj.image=imread('8_of_clubs.png');
-    case 49
+    case 48
         obj.image=imread('9_of_clubs.png');
-    case 50
+    case 49
         obj.image=imread('10_of_clubs.png');
-    case 51
+    case 50
         obj.image=imread('jack_of_clubs2.png');
-    case 52
+    case 51
         obj.image=imread('queen_of_clubs2.png');
-    case 0  
+    case 52 
         obj.image=imread('king_of_clubs2.png');
 end
