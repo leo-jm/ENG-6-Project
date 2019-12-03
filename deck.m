@@ -7,7 +7,7 @@ classdef deck < handle
     end
     methods
         % Constructor function
-        function obj = deck(decks)
+        function obj = deck(decks,jokers)
             if nargin == 0
                 obj.decks = 1;
                 for j = 1:52
@@ -15,6 +15,17 @@ classdef deck < handle
                         obj.cards(end+1) = card(j);
                     else
                         obj.cards = card(j);
+                    end
+                end
+            elseif nargin == 1
+                obj.decks = decks;
+                for i = 1:decks
+                    for j = 1:52
+                        if ~isempty(obj.cards)
+                            obj.cards(end+1) = card(j);
+                        else
+                            obj.cards = card(j);
+                        end
                     end
                 end
             else
@@ -27,6 +38,9 @@ classdef deck < handle
                             obj.cards = card(j);
                         end
                     end
+                end
+                for i = 1:jokers
+                    obj.cards(end+1) = card(0);
                 end
             end
         end

@@ -41,18 +41,27 @@ classdef player < handle
         end
         % Calculates the value of the player's hand
         % Will count an Ace as 11 if the hand value doesn't pass 21
-        function calcHandValue (obj)
-            cardValues = [obj.hand.value];
-            logic = cardValues == 1;
-            if sum(logic) > 0
-                value1 = sum(cardValues)+10;
-                if value1 > 21
+        % Pass the function an argument == 1 "obj.calcHandValue(1)"
+        % To calculate hand value based on altValues
+        function calcHandValue (obj,altValues)
+            if nargin == 2
+                if altValues
+                    cardValues = [obj.hand.altValue];
                     obj.handValue = sum(cardValues);
-                else
-                    obj.handValue = value1;
                 end
             else
-               obj.handValue = sum(cardValues);
+               cardValues = [obj.hand.value];
+               logic = cardValues == 1;
+               if sum(logic) > 0
+                   value1 = sum(cardValues)+10;
+                   if value1 > 21
+                       obj.handValue = sum(cardValues);
+                   else
+                       obj.handValue = value1;
+                   end
+                else
+                   obj.handValue = sum(cardValues);
+                end 
             end
         end
         % Call to set bet amount
