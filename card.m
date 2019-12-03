@@ -6,6 +6,7 @@ classdef card < handle
         inPlay = 0;
         position = 0;
         faceup = 0;
+        image;
     end
     methods
         % Constructor function
