@@ -12,8 +12,8 @@ classdef card < handle
         % Constructor function
         function obj = card(cardNumber)
             obj.cardNumber = cardNumber;
-            cardValues =[10;1;2;3;4;5;6;7;8;9;10;10];
-            remainder = mod(cardNumber,12);
+            cardValues =[10;1;2;3;4;5;6;7;8;9;10;10;10];
+            remainder = mod(cardNumber,13);
             obj.value = cardValues(remainder+1);
         end
         
