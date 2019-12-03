@@ -31,7 +31,7 @@ classdef gameSettings_exported < matlab.apps.AppBase
                 decks = app.DecksEditField.Value
             global jokers
                 jokers = app.JokersEditField.Value
-            run("FinalGui_exported.m")
+            run("Gamemode1_exported.m")
             
         end
     end
