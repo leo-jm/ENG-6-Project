@@ -212,7 +212,7 @@ classdef FinalGui_exported < matlab.apps.AppBase
             elseif player1.handValue > AI.handValue
                 msgbox('Winner Winner Chicken Dinner')
             elseif player1.handValue < AI.handValue
-                msgbox('Tough Luck, You Loose')
+                msgbox('Tough Luck, You Lose')
             else % player1.handValue = AI.handValue
                 msgbox('Draw')
             end
