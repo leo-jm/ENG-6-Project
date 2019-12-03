@@ -2,8 +2,6 @@ classdef player < handle
     properties
         hand = [];
         handValue = 0;
-        bet = double(0);
-        balance = double(5000);
     end
     methods
         % Gives player two cards
@@ -62,19 +60,6 @@ classdef player < handle
                 else
                    obj.handValue = sum(cardValues);
                 end 
-            end
-        end
-        % Call to set bet amount
-        function changeBet(obj,amount)
-            obj.bet = amount;
-        end
-        
-        % Change balance after win/loss
-        function changeBalance(obj,win)
-            if win
-                obj.balance = obj.balance + obj.bet;
-            else
-                obj.balance = obj.balance - obj.bet;
             end
         end
     end
