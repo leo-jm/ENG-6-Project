@@ -24,9 +24,7 @@ classdef player < handle
             obj.hand = cardDeck.drawCard;
             obj.hand(end+1) = cardDeck.drawCard;
             if nargin == 3
-                disp("test1")
                 if dealer == 1
-                    disp("test2")
                     obj.hand(1).cardFaceUp                   
                 end
             end
