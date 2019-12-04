@@ -1,4 +1,4 @@
-classdef gameSettings_exported < matlab.apps.AppBase
+qclassdef gameSettings_exported < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
