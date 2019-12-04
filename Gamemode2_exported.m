@@ -54,31 +54,67 @@ classdef Gamemode2_exported < matlab.apps.AppBase
 
         % Code that executes after component creation
         function startupFcn(app)
-            % startup is when player clicks play             
+            % startup is when player clicks play
             
+            % giving cardDecks a placeholder
+            cardDeck1 = []
+            cardDeck2 = []
+            cardDeck3 = []
+                        
             % setting akk DeckImages to cardback.jpg
-            % this should be a function which assigns all .jpg
             app.cardDeck1Image.ImageSource = imread('cardback.jpg');
             app.cardDeck2Image.ImageSource = imread('cardback.jpg');
-            app.cardDeck3Image.ImageSource = imread('cardback.jpg');
-            % set other Images
+            app.cardDeck3Image.ImageSource = imread('cardback.jpg'); 
             
             % setting decks as a global variable
             % setting deckDraw as a global variable
             % assigning deckDraw value of 3
             global decks  
+            global cardDecks
             global deckDraw 
             deckDraw = 3
-                                             
-            % assigning objects cardDeck with class deck and amount of decks
-            cardDeck1 = deck(decks);
-            cardDeck2 = deck(decks);
-            cardDeck3 = deck(decks);
             
-            % shuffling the amount of decks we put in
-            %%% cardDeck1.shuffleDeck;
-            %%% cardDeck2.shuffleDeck;
-            %%% cardDeck3.shuffleDeck;
+            % hide cardDecks not being used
+            switch cardDecks
+                case 1
+                    app.cardDeck2Image.Visible = 'off'
+                    app.cardDeck3Image.Visible = 'off'
+                case 2 
+                    app.cardDeck3Image.Visible = 'off'
+                otherwise 
+                    app.cardDeck1Image.Visible = 'on'
+                    app.cardDeck2Image.Visible = 'on'
+                    app.cardDeck3Image.Visible = 'on'
+            end
+                                             
+            % assigning objects cardDecks with class deck and amount of decks
+            % depends on how many cardDecks intially set in gameSettings
+            switch cardDecks
+                
+                case 1 
+                    cardDeck1 = deck(decks);
+                case 2 
+                    cardDeck1 = deck(decks);
+                    cardDeck2 = deck(decks);
+                case 3 
+                    cardDeck1 = deck(decks);
+                    cardDeck2 = deck(decks);
+                    cardDeck3 = deck(decks);
+            end
+            
+            
+            % shuffling the amount of decks we put in per cardDeck
+            switch cardDecks
+                case 1
+                    %%% cardDeck1.shuffleDeck;
+                case 2
+                    %%% cardDeck1.shuffleDeck;
+                    %%% cardDeck2.shuffleDeck;
+                case 3
+                    %%% cardDeck1.shuffleDeck;
+                    %%% cardDeck2.shuffleDeck;
+                    %%% cardDeck3.shuffleDeck;
+            end
                                     
             % setting displays as string(sum of hands)
             app.HandDisplayLabel.Text = "Your Hand: " + "0";
@@ -111,33 +147,71 @@ classdef Gamemode2_exported < matlab.apps.AppBase
         function StartButtonPushed(app, event)
             % assigning the Dealer and Human their hands to start the round
             
+            % setting cardDecks to be a global variable
+            global cardDecks
+            
             % assigning local objects cardDeck with the stored app value
-            % clearing table of cards from prebious round
             cardDeck1 = app.cardDeck1Memory;
-            cardDeck1.clearTable;
             cardDeck2 = app.cardDeck2Memory;
-            cardDeck2.clearTable;
             cardDeck3 = app.cardDeck3Memory;
-            cardDeck3.clearTable;
+            
+            % clearing table of cards from previous round
+            % depends on how many cardDecks intially set in gameSettings
+            switch cardDecks
+                case 1
+                    cardDeck1.clearTable;
+                case 2
+                    cardDeck1.clearTable;
+                    cardDeck2.clearTable;
+                case 3
+                     cardDeck1.clearTable;
+                cardDeck2.clearTable;
+                cardDeck3.clearTable;
+            end
+           
             
             % if respected carddeck is less then 2
             % reshuffle discard pile into deck
             % logical will equal an array of zeros unless < 2 cards left
             % if .cards < 2 then an element would = 1
             % if an element equals 1 then reshuffleDiscard will run
-            %% this should be changed to be better
-            logical =  ( size(cardDeck1.cards) < 2 );
-            if sum(logical) == 2
-                cardDeck1.reshuffleDiscard
+            % depends on how many cardDecks intially set in gameSettings
+            switch cardDecks
+                case 1 % if cardDecks = 1 only run for cardDeck1
+                    logical =  ( size(cardDeck1.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck1.reshuffleDiscard
+                    end
+                    
+                case 2 % if cardDecks = 2 run for cardDeck 1 and 2
+                    logical =  ( size(cardDeck1.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck1.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck2.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck2.reshuffleDiscard
+                    end
+                    
+                case 3 % if cardDecks = 3 run for cardDeck 1,2, and 3
+                    logical =  ( size(cardDeck1.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck1.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck2.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck2.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck3.cards) < 2 );
+                    if sum(logical) == 2
+                        cardDeck3.reshuffleDiscard
+                    end
+                    
             end
-            logical =  ( size(cardDeck2.cards) < 2 );
-            if sum(logical) == 2
-                cardDeck2.reshuffleDiscard
-            end
-            logical =  ( size(cardDeck3.cards) < 2 );
-            if sum(logical) == 2
-                cardDeck3.reshuffleDiscard
-            end
+            
+            % setting objects to class player
+            player1 = player
+            dealer = player
             
             % dealing two cards to the player1(Human) and dealer(Dealer)
             % this is a reach feature because it deals from each ...
@@ -147,43 +221,77 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             global deckDraw
             needCard = 1
             
-            % setting objects to class player
-            player1 = player
-            dealer = player
-            
-            for i = [1:4] % deal two cards to player1 and two to dealer
-                % alternating which deck to draw from
-                if deckDraw == 1
-                    deckDraw = 2
-                elseif deckDraw == 2
-                    deckDraw = 3
-                else
-                    deckDraw = 1
-                end
-                
-                switch needCard
-                    case 1 % player1 draws
-                        if deckDraw == 1 % draw from cardDeck1
-                            player1.hit(cardDeck1)
-                        elseif deckDraw == 2 % draw from cardDeck2
-                            player1.hit(cardDeck2)
-                        else % draw from cardDeck3
-                            player1.hit(cardDeck3)
+            % depends on how many cardDecks intially set in gameSettings
+            switch cardDecks
+                case 1 % run game exactly the same as Gamemode1
+                    
+                    player1 = player(cardDeck1)
+                    dealer = player(cardDeck1)
+                    
+                case 2 % if cardDecks = 2 alternate between 2 cardDecks
+                    for i = [1:4] % deal two cards to player1 and two to dealer
+                        if deckDraw == 1
+                            deckDraw = 2
+                        else
+                            deckDraw = 1
                         end
-                        needCard = 2
                         
-                    case 2 % dealer draws
-                        if deckDraw == 1 % draw from cardDeck1
-                            dealer.hit(cardDeck1)
-                        elseif deckDraw == 2 % draw from cardDeck2
-                            dealer.hit(cardDeck2)
-                        else % draw from cardDeck3
-                            dealer.hit(cardDeck3)
+                        switch needCard
+                            case 1 % player1 draws
+                                if deckDraw == 1 % draw from cardDeck1
+                                    player1.hit(cardDeck1)
+                                else
+                                    player1.hit(cardDeck2)
+                                end
+                                needCard = 2
+                                
+                            case 2 % dealer draws
+                                if deckDraw == 1 % draw from cardDeck1
+                                    dealer.hit(cardDeck1)
+                                else deckDraw == 2 % draw from cardDeck2
+                                    dealer.hit(cardDeck2)
+                                end
+                                needCard = 1
                         end
-                        needCard = 1
+                    end
+                  
+                   
+                    
+                case 3 % if cardDecks = 3 alternate between 3 cardDecks
+                    for i = [1:4] % deal two cards to player1 and two to dealer
+                        % alternating which deck to draw from
+                        if deckDraw == 1
+                            deckDraw = 2
+                        elseif deckDraw == 2
+                            deckDraw = 3
+                        else
+                            deckDraw = 1
+                        end
                         
-                end
-            end
+                        switch needCard
+                            case 1 % player1 draws
+                                if deckDraw == 1 % draw from cardDeck1
+                                    player1.hit(cardDeck1)
+                                elseif deckDraw == 2 % draw from cardDeck2
+                                    player1.hit(cardDeck2)
+                                else % draw from cardDeck3
+                                    player1.hit(cardDeck3)
+                                end
+                                needCard = 2
+                                
+                            case 2 % dealer draws
+                                if deckDraw == 1 % draw from cardDeck1
+                                    dealer.hit(cardDeck1)
+                                elseif deckDraw == 2 % draw from cardDeck2
+                                    dealer.hit(cardDeck2)
+                                else % draw from cardDeck3
+                                    dealer.hit(cardDeck3)
+                                end
+                                needCard = 1
+                        end
+                    end
+            end           
+        
                                     
             % calculate hand values for player1
             % calculate hand values for dealer
@@ -203,17 +311,38 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % logical will equal an array of zeros unless .cards = 0
             % if .cards = 0 then an element will equal 1
             % if an element equals 1 then reshuffleDiscard will run
-            logical =  ( size(cardDeck1.cards) == 0 );
-            if sum(logical) == 1
-                cardDeck1.reshuffleDiscard
-            end
-            logical =  ( size(cardDeck2.cards) == 0 );
-            if sum(logical) == 1
-                cardDeck2.reshuffleDiscard
-            end
-            logical =  ( size(cardDeck3.cards) == 0 );
-            if sum(logical) == 1
-                cardDeck3.reshuffleDiscard
+            % depends on how many cardDecks intially set in gameSettings
+            switch cardDecks
+                case 1
+                    logical =  ( size(cardDeck1.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck1.reshuffleDiscard
+                    end
+                    
+                case 2
+                    logical =  ( size(cardDeck1.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck1.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck2.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck2.reshuffleDiscard
+                    end
+                    
+                case 3
+                    logical =  ( size(cardDeck1.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck1.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck2.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck2.reshuffleDiscard
+                    end
+                    logical =  ( size(cardDeck3.cards) == 0 );
+                    if sum(logical) == 1
+                        cardDeck3.reshuffleDiscard
+                    end
+                    
             end
             
             % display objects in Command Window
@@ -224,11 +353,20 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             dealer
                                               
             % make buttons visible if being used
+            % depends on how many cardDecks intially set in gameSettings
             %%% app.StartButton.Visible = 'off'
             app.StandButton.Visible = 'on'
-            app.Hit1Button.Visible = 'on'
-            app.Hit2Button.Visible = 'on'
-            app.Hit3Button.Visible = 'on'
+            switch cardDecks
+                case 1
+                    app.Hit1Button.Visible = 'on'
+                case 2
+                    app.Hit1Button.Visible = 'on'
+                    app.Hit2Button.Visible = 'on'
+                case 3
+                    app.Hit1Button.Visible = 'on'
+                    app.Hit2Button.Visible = 'on'
+                    app.Hit3Button.Visible = 'on'
+            end
             
             % storing objects within the app
             app.cardDeck1Memory = cardDeck1
@@ -315,11 +453,13 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             
             % assigning local objects with stored app values
             % setting deckDraw as a global variable
+            % setting cardDecks as a global variable
             cardDeck1 = app.cardDeck1Memory;
             cardDeck2 = app.cardDeck2Memory;
             cardDeck3 = app.cardDeck3Memory;
             dealer = app.Dealer;
             player1 = app.Human;
+            global cardDecks
             global deckDraw
             
             % loop that makes the Dealer play the game til it gets >= 17
@@ -327,20 +467,43 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                 
                 % using function hit to draw a card from cardDecks
                 % consecutively
-                if deckDraw == 1
-                    deckDraw = 2
-                elseif deckDraw == 2
-                    deckDraw = 3
-                else
-                    deckDraw = 1
-                end
-                
-                if deckDraw == 1 % draw from cardDeck1
-                    dealer.hit(cardDeck1)
-                elseif deckDraw == 2 % draw from cardDeck2
-                    dealer.hit(cardDeck2)
-                else % draw from cardDeck3
-                    dealer.hit(cardDeck3)
+                % depends on how many cardDecks intially set in gameSettings
+                switch cardDecks
+                    case 1 % run exactly like Gamemode1
+                        
+                        dealer.hit(cardDeck1)
+                        
+                    case 2 % playing with 2 cardDecks
+                        if deckDraw == 1
+                            deckDraw = 2
+                        else 
+                            deckDraw = 1
+                        
+                        end
+                        
+                        if deckDraw == 1 % draw from cardDeck1
+                            dealer.hit(cardDeck1)
+                        else % draw from cardDeck2
+                            dealer.hit(cardDeck2)
+                        end
+                        
+                    case 3 % playing with 3 cardDecks
+                        if deckDraw == 1
+                            deckDraw = 2
+                        elseif deckDraw == 2
+                            deckDraw = 3
+                        else
+                            deckDraw = 1
+                        end
+                        
+                        if deckDraw == 1 % draw from cardDeck1
+                            dealer.hit(cardDeck1)
+                        elseif deckDraw == 2 % draw from cardDeck2
+                            dealer.hit(cardDeck2)
+                        else % draw from cardDeck3
+                            dealer.hit(cardDeck3)
+                        end
+                        
                 end
                 
                 % calculating dealer's hand value
@@ -350,18 +513,40 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                 % logical will equal an array of zeros unless .cards = 0
                 % if .cards = 0 then an element will equal 1
                 % if an element equals 1 then reshuffleDiscard will run
-                logical =  ( size(cardDeck1.cards) == 0 );
-                if sum(logical) == 1
-                    cardDeck1.reshuffleDiscard
+                % depends on how many cardDecks intially set in gameSettings
+                switch cardDecks
+                    case 1
+                        logical =  ( size(cardDeck1.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck1.reshuffleDiscard
+                        end
+                        
+                    case 2
+                        logical =  ( size(cardDeck1.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck1.reshuffleDiscard
+                        end
+                        logical =  ( size(cardDeck2.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck2.reshuffleDiscard
+                        end
+                        
+                    case 3
+                        logical =  ( size(cardDeck1.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck1.reshuffleDiscard
+                        end
+                        logical =  ( size(cardDeck2.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck2.reshuffleDiscard
+                        end
+                        logical =  ( size(cardDeck3.cards) == 0 );
+                        if sum(logical) == 1
+                            cardDeck3.reshuffleDiscard
+                        end
+                        
                 end
-                logical =  ( size(cardDeck2.cards) == 0 );
-                if sum(logical) == 1
-                    cardDeck2.reshuffleDiscard
-                end
-                logical =  ( size(cardDeck3.cards) == 0 );
-                if sum(logical) == 1
-                    cardDeck3.reshuffleDiscard
-                end
+                
                 
                 % display sum of Dealer's hand values
                 % pause the loop for 1 second
@@ -372,6 +557,8 @@ classdef Gamemode2_exported < matlab.apps.AppBase
         
         % Display objects in the Command Window
         cardDeck1
+        cardDeck2
+        cardDeck3
         player1
         dealer
         
