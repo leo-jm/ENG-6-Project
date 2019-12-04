@@ -6,14 +6,18 @@ classdef player < handle
     methods
         % Gives player two cards
         function obj = player(cardDeck,dealer)
-            obj.hand = cardDeck.drawCard;
-            obj.hand(end+1) = cardDeck.drawCard;
-            if nargin == 2
-                if dealer == 1
-                    obj.hand(1).cardFaceUp                   
+            if nargin == 0
+                obj.hand = []
+            else
+                obj.hand = cardDeck.drawCard;
+                obj.hand(end+1) = cardDeck.drawCard;
+                if nargin == 2
+                    if dealer == 1
+                        obj.hand(1).cardFaceUp
+                    end
                 end
+                obj.calcHandValue
             end
-            obj.calcHandValue
         end
         % New hand at the start of a new round
         function newHand(obj,cardDeck,dealer)
