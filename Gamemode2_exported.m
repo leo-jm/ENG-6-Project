@@ -66,12 +66,24 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             app.cardDeck2Image.ImageSource = imread('cardback.jpg');
             app.cardDeck3Image.ImageSource = imread('cardback.jpg'); 
             
+            app.HandImage1.Visible = 'off';
+            app.HandImage2.Visible = 'off';
+            app.HandImage3.Visible = 'off';
+            app.HandImage4.Visible = 'off';
+            app.HandImage5.Visible = 'off';
+            app.CompHandImage1.Visible = 'off';
+            app.CompHandImage2.Visible = 'off';
+            app.CompHandImage3.Visible = 'off';
+            app.CompHandImage4.Visible = 'off';
+            app.CompHandImage5.Visible = 'off';
+            
             % setting decks as a global variable
             % setting deckDraw as a global variable
             % assigning deckDraw value of 3
             global decks  
             global cardDecks
             global deckDraw 
+            global jokers
             deckDraw = 3
             
             % hide cardDecks not being used
@@ -92,28 +104,28 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             switch cardDecks
                 
                 case 1 
-                    cardDeck1 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
                 case 2 
-                    cardDeck1 = deck(decks);
-                    cardDeck2 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
+                    cardDeck2 = deck(decks,jokers);
                 case 3 
-                    cardDeck1 = deck(decks);
-                    cardDeck2 = deck(decks);
-                    cardDeck3 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
+                    cardDeck2 = deck(decks,jokers);
+                    cardDeck3 = deck(decks,jokers);
             end
             
             
             % shuffling the amount of decks we put in per cardDeck
             switch cardDecks
                 case 1
-                    %%% cardDeck1.shuffleDeck;
+                     cardDeck1.shuffleDeck;
                 case 2
-                    %%% cardDeck1.shuffleDeck;
-                    %%% cardDeck2.shuffleDeck;
+                     cardDeck1.shuffleDeck;
+                     cardDeck2.shuffleDeck;
                 case 3
-                    %%% cardDeck1.shuffleDeck;
-                    %%% cardDeck2.shuffleDeck;
-                    %%% cardDeck3.shuffleDeck;
+                     cardDeck1.shuffleDeck;
+                     cardDeck2.shuffleDeck;
+                     cardDeck3.shuffleDeck;
             end
                                     
             % setting displays as string(sum of hands)
@@ -154,6 +166,22 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             cardDeck1 = app.cardDeck1Memory;
             cardDeck2 = app.cardDeck2Memory;
             cardDeck3 = app.cardDeck3Memory;
+            
+            app.HandImage1.Visible = 'off';
+            app.HandImage2.Visible = 'off';
+            app.HandImage3.Visible = 'off';
+            app.HandImage4.Visible = 'off';
+            app.HandImage5.Visible = 'off';
+            app.CompHandImage1.Visible = 'off';
+            app.CompHandImage2.Visible = 'off';
+            app.CompHandImage3.Visible = 'off';
+            app.CompHandImage4.Visible = 'off';
+            app.CompHandImage5.Visible = 'off';
+            
+            app.cardDeck1Image.ImageSource = imread('cardback.jpg');
+            app.cardDeck2Image.ImageSource = imread('cardback.jpg');
+            app.cardDeck3Image.ImageSource = imread('cardback.jpg'); 
+            
             
             % clearing table of cards from previous round
             % depends on how many cardDecks intially set in gameSettings
@@ -291,7 +319,16 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                         end
                     end
             end           
-        
+            
+            app.HandImage1.ImageSource = player1.hand(1).image;
+            app.HandImage2.ImageSource = player1.hand(2).image;
+            app.HandImage1.Visible = 1;
+            app.HandImage2.Visible = 1;
+            
+            app.CompHandImage1.ImageSource = dealer.hand(1).image;
+            app.CompHandImage2.ImageSource = imread('cardback.jpg');
+            app.CompHandImage1.Visible = 1;
+            app.CompHandImage2.Visible = 1;
                                     
             % calculate hand values for player1
             % calculate hand values for dealer
@@ -368,6 +405,18 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                     app.Hit3Button.Visible = 'on'
             end
             
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
+            
             % storing objects within the app
             app.cardDeck1Memory = cardDeck1
             app.cardDeck2Memory = cardDeck2
@@ -383,7 +432,10 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % cardDeck1
             
             % assigning local objects with stored app values
-            cardDeck1 = app.cardDeck1Memory;
+            cardDeck1 = app.cardDeck1Memory
+            cardDeck2 = app.cardDeck2Memory;
+            cardDeck3 = app.cardDeck3Memory;
+            
             player1 = app.Human;
             
             % lower tempBalance by the input of BetEditField
@@ -398,6 +450,19 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % calculating player1's hand value
             player1.hit(cardDeck1);
             player1.calcHandValue;
+            
+            switch length(player1.hand)
+                case 3
+                    app.HandImage3.ImageSource = player1.hand(3).image;
+                    app.HandImage3.Visible = 1;
+                case 4
+                    app.HandImage4.ImageSource = player1.hand(4).image;
+                    app.HandImage4.Visible = 1;
+                case 5
+                    app.HandImage5.ImageSource = player1.hand(5).image;
+                    app.HandImage5.Visible = 1;
+                    app.Hit1Button.Visible = 'off';
+            end
             
             % if deck is empty then reshuffle 
             % logical will equal an array of zeros unless .cards = 0
@@ -434,6 +499,18 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                 
             end
             
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
+            
             % storing local objects within the app
             app.cardDeck1Memory = cardDeck1;
             app.Human = player1;
@@ -461,6 +538,9 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             player1 = app.Human;
             global cardDecks
             global deckDraw
+            
+            app.CompHandImage2.ImageSource = dealer.hand(2).image;
+            pause(1);
             
             % loop that makes the Dealer play the game til it gets >= 17
             while dealer.handValue < 17
@@ -503,9 +583,20 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                         else % draw from cardDeck3
                             dealer.hit(cardDeck3)
                         end
+                      
+                    switch length(dealer.hand)
+                        case 3
+                            app.CompHandImage3.ImageSource = dealer.hand(3).image;
+                            app.CompHandImage3.Visible = 1;
+                        case 4
+                            app.CompHandImage4.ImageSource = dealer.hand(4).image;
+                            app.CompHandImage4.Visible = 1;
+                        case 5
+                            app.CompHandImage5.ImageSource = dealer.hand(5).image;
+                            app.CompHandImage5.Visible = 1;  
                         
+                    end
                 end
-                
                 % calculating dealer's hand value
                 dealer.calcHandValue;
                 
@@ -599,7 +690,9 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % cardDeck2
             
             % assigning local objects with stored app values
+            cardDeck1 = app.cardDeck1Memory
             cardDeck2 = app.cardDeck2Memory;
+            cardDeck3 = app.cardDeck3Memory;
             player1 = app.Human;
             
             % lower tempBalance by the input of BetEditField
@@ -614,6 +707,19 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % calculating player1's hand value
             player1.hit(cardDeck2);
             player1.calcHandValue;
+            
+            switch length(player1.hand)
+                case 3
+                    app.HandImage3.ImageSource = player1.hand(3).image;
+                    app.HandImage3.Visible = 1;
+                case 4
+                    app.HandImage4.ImageSource = player1.hand(4).image;
+                    app.HandImage4.Visible = 1;
+                case 5
+                    app.HandImage5.ImageSource = player1.hand(5).image;
+                    app.HandImage5.Visible = 1;
+                    app.Hit1Button.Visible = 'off';
+            end
             
             % if deck is empty then reshuffle 
             % logical will equal an array of zeros unless .cards = 0
@@ -650,6 +756,18 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                 
             end
             
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
+            
             % storing local objects within the app
             app.cardDeck2Memory = cardDeck2;
             app.Human = player1;
@@ -662,6 +780,8 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % cardDeck3
             
             % assigning local objects with stored app values
+            cardDeck1 = app.cardDeck1Memory
+            cardDeck2 = app.cardDeck2Memory;
             cardDeck3 = app.cardDeck3Memory;
             player1 = app.Human;
             
@@ -677,6 +797,19 @@ classdef Gamemode2_exported < matlab.apps.AppBase
             % calculating player1's hand value
             player1.hit(cardDeck3);
             player1.calcHandValue;
+            
+            switch length(player1.hand)
+                case 3
+                    app.HandImage3.ImageSource = player1.hand(3).image;
+                    app.HandImage3.Visible = 1;
+                case 4
+                    app.HandImage4.ImageSource = player1.hand(4).image;
+                    app.HandImage4.Visible = 1;
+                case 5
+                    app.HandImage5.ImageSource = player1.hand(5).image;
+                    app.HandImage5.Visible = 1;
+                    app.Hit1Button.Visible = 'off';
+            end
             
             % if deck is empty then reshuffle 
             % logical will equal an array of zeros unless .cards = 0
@@ -711,6 +844,18 @@ classdef Gamemode2_exported < matlab.apps.AppBase
                 app.Hit3Button.Visible = 'off'
                 app.StartButton.Visible = 'on'
                 
+            end
+            
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
             end
             
             % storing local objects within the app
@@ -847,7 +992,7 @@ classdef Gamemode2_exported < matlab.apps.AppBase
     methods (Access = public)
 
         % Construct app
-        function app = Gamemode2_exported
+        function app = Gamemode2
 
             % Create UIFigure and components
             createComponents(app)
