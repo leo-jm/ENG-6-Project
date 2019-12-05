@@ -83,6 +83,7 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             global decks  
             global cardDecks
             global AIDifficulty
+            global jokers
             AIDifficulty = 0
             global deckDraw 
             deckDraw = 3
@@ -112,14 +113,14 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             switch cardDecks
                 
                 case 1 
-                    cardDeck1 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
                 case 2 
-                    cardDeck1 = deck(decks);
-                    cardDeck2 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
+                    cardDeck2 = deck(decks,jokers);
                 case 3 
-                    cardDeck1 = deck(decks);
-                    cardDeck2 = deck(decks);
-                    cardDeck3 = deck(decks);
+                    cardDeck1 = deck(decks,jokers);
+                    cardDeck2 = deck(decks,jokers);
+                    cardDeck3 = deck(decks,jokers);
             end
             
             
@@ -171,6 +172,10 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             
             % setting cardDecks to be a global variable
             global cardDecks
+            
+            app.cardDeck1Image.ImageSource = imread('cardback.jpg');
+            app.cardDeck2Image.ImageSource = imread('cardback.jpg');
+            app.cardDeck3Image.ImageSource = imread('cardback.jpg'); 
             
             % assigning local objects cardDeck with the stored app value
             % assigning local object AIcontrol with the stored app value
@@ -415,6 +420,19 @@ classdef Gamemode3_exported < matlab.apps.AppBase
                     app.Hit3Button.Visible = 'on'
             end
             
+            % joker function
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
+            
             % storing objects within the app
             app.cardDeck1Memory = cardDeck1
             app.cardDeck2Memory = cardDeck2
@@ -556,6 +574,19 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             
             % display sum of Computer's hand values
             app.CompHandDisplayLabel.Text = " Computer's Hand: " + string(computer.handValue)
+            
+            % Joker function
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
             
             % storing local objects within the app
             app.cardDeck1Memory = cardDeck1;
@@ -952,6 +983,19 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             % display sum of Computer's hand values
             app.CompHandDisplayLabel.Text = " Computer's Hand: " + string(computer.handValue)
             
+            % Joker function
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
+            
             % storing local objects within the app
             app.cardDeck1Memory = cardDeck1;
             app.cardDeck2Memory = cardDeck2;
@@ -1092,6 +1136,19 @@ classdef Gamemode3_exported < matlab.apps.AppBase
             
             % display sum of Computer's hand values
             app.CompHandDisplayLabel.Text = " Computer's Hand: " + string(computer.handValue)
+            
+            % joker function
+            if sum([player1.hand(:).value] == 0) > 0
+                if length(cardDeck1) > 0
+                    app.cardDeck1Image.ImageSource = cardDeck1.cards(1).image;
+                end
+                if length(cardDeck2) > 0
+                    app.cardDeck2Image.ImageSource = cardDeck2.cards(1).image;
+                end
+                if length(cardDeck3) > 0
+                    app.cardDeck3Image.ImageSource = cardDeck3.cards(1).image;
+                end
+            end
             
             % storing local objects within the app
             app.cardDeck1Memory = cardDeck1;
