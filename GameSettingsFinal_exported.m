@@ -70,8 +70,6 @@ classdef GameSettingsFinal_exported < matlab.apps.AppBase
                 run("TwoPlayerGamemode_exported.m");
             end
             
-            close("GameSettingsFinal.mlapp");
- 
         end
 
         % Button pushed function: RulesButton
