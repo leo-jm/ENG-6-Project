@@ -65,7 +65,7 @@ classdef GameSettingsFinal_exported < matlab.apps.AppBase
             % statement that determines which GUI to activate
             % if one of the check boxes are checked former runs
             if (AIdifficulty == 0) | (AIdifficulty == 1)
-                run("Gamemode3_exported.m");
+                run("Gamemode3_final_exported.m");
             else % if neither are checked, latter runs
                 run("Gamemode1player_exported.m");
             end
@@ -77,7 +77,7 @@ classdef GameSettingsFinal_exported < matlab.apps.AppBase
 
         % Button pushed function: RulesButton
         function RulesButtonPushed(app, event)
-            run("RulesFinal.m")
+            run("RulesFinal_exported.m")
         end
     end
 
